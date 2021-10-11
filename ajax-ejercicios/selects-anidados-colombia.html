@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="#" />
+    <title>Selects Anidados Colombia</title>
+  </head>
+
+  <body>
+    <h1>Selects Anidados Colombia</h1>
+    <h2>País Colombia</h2>
+    <label for="select-primary">Departamentos</label>
+    <select name="primary" id="select-primary">
+      <option value="">Elige un Departamento</option>
+    </select>
+    <p></p>
+    <label for="select-secondary">Municipios</label>
+    <select name="secondary" id="select-secondary">
+      <option value="">Elige un Muinicipio</option>
+    </select>
+    <p></p>
+    <script>
+      /* ********** Curso JavaScript: 138. Ejercicios AJAX - APIs: Selects Anidados con Fetch - #jonmircha ********** */
+      /*
+    https://api-sepomex.hckdrk.mx/
+    https://api-sepomex.hckdrk.mx/documentacion/docs
+  */
+
+      const d = document,
+        $selectPrimary = d.getElementById("select-primary"),
+        $selectSecundary = d.getElementById("select-secondary");
+
+
+      function loadDepartamentos() {
+         fetch("../assets/colombia.json")
+          .then(res => res.ok ? res.json(): Promise.reject(res))
+          .then(json=>{
+
+              console.log(json);
+               let $options = `<option value="">Elige un Departamento</option>`;
+              json.forEach(el => $options += `<option value="${el.id}">${el.departamento}</option>`);
+              $selectPrimary.innerHTML = $options; 
+          })
+          .catch(err =>{
+            console.log(err);
+            let message = err.statusText || "Ocurrió un Error";
+            $selectPrimary.nextElementSibling.innerHTML = `Error ${err.status}:${message}`;
+          });
+      }
+
+      function loadMunicipios(departamento) {
+         fetch("../assets/colombia.json/")
+          .then(res => res.ok ? res.json(): Promise.reject(res))
+          .then(json=>{
+              console.log(json);
+               let $options = `<option value="">Elige un Municipio</option>`;
+              json.forEach(el => $options += `<option value="${el.ciudades}">${el.ciudades}</option>`);
+              $selectSecundary.innerHTML = $options; 
+          })
+          .catch(err =>{
+            console.log(err);
+            let message = err.statusText || "Ocurrió un Error";
+            $selectSecundary.nextElementSibling.innerHTML = `Error ${err.status}:${message}`;
+          });
+      }
+
+      d.addEventListener("DOMContentLoaded", loadDepartamentos);
+
+      $selectPrimary.addEventListener("change", (e) => loadMunicipios(e.target.value)); 
+
+    </script>
+  </body>
+</html>
